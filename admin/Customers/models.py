@@ -14,7 +14,7 @@ class Customer(db.Model):
     # password = db.Column(db.String(50), nullable=False)
     registration_date = db.Column(db.DateTime, default=datetime.now)
 
-    orders = db.relationship('Order', backref='customer')
-    feedbacks = db.relationship('Feedback', backref='customer', lazy=True)
-    address = db.relationship('Address', backref='customer', lazy=True)
+    orders = db.relationship('Order',cascade='all, delete-orphan', backref='customer')
+    feedbacks = db.relationship('Feedback',cascade='all, delete-orphan', backref='customer', lazy=True)
+    address = db.relationship('Address',cascade='all, delete-orphan', backref='customer', lazy=True)
     

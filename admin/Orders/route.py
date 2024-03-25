@@ -47,19 +47,17 @@ def orders():
 def show_one_order(id):
     one_order = Order.query.get_or_404(id)
 
-    All_order_item = []
+    All_order_item = ''
     for i in one_order.orderitems:
-        All_order_item.append({
-            i.product.name,
-            i.quantity
-        })
+        All_order_item +="product:    "+ i.product.name +" quantity:    "+str(i.quantity)+ '\n'
 
+    print(All_order_item)
     return jsonify({
         "id":one_order.id,
         'order_date':one_order.order_date,
         'status':one_order.status,
         'customer':one_order.customer.username,
-        # 'items':All_order_item
+        'items':All_order_item
     })
 
 
@@ -103,4 +101,3 @@ def DELETE_one_order(id):
         'customer':order.customer.username,
     }
     return jsonify(user)
-    

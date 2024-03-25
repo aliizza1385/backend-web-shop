@@ -16,9 +16,9 @@ def product():
         categori.append({
             'id':c.id,
             'name':c.name,
-            'category_id':c.category_id,
-            'description':c.description,
-            'price':c.price,
+            'description':c.category_id,
+            'parent_category_id':c.description,
+            'created_at':c.price,
             
         })
 
