@@ -20,15 +20,6 @@ def get_customer(id):
     return final_customer
     
 
-# @blueprint.route("/customers", methods=["GET"])
-# def get_customers():
-#     sort_by = request.args.get("sort_by", "name")
-#     sort_order = request.args.get("sort_order", "asc")
-#     sorted_customers = sorted(Customers, key=lambda x: x[sort_by], reverse=sort_order == "desc")
-#     return jsonify(sorted_customers)
-
-
-
 @blueprint.route('/customers', methods=["GET"])
 def customers():
     customers = Customer.query.all()
