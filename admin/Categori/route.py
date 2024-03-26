@@ -1,124 +1,104 @@
 import os
 from flask import Blueprint, jsonify, request
-from .models import Categori
+from .models import Category
 from initialize import db
 
 
-blueprint = Blueprint('categori', __name__)
+blueprint = Blueprint('category', __name__)
 
 
 
-@blueprint.route('/categori', methods=["GET"])
-def product():
-    c = Categori.query.all()
-    categori = []
+@blueprint.route('/category', methods=["GET"])
+def category():
+    c = Category.query.all()
+    category = []
     for categor in c:
-        categori.append({
-            'id':c.id,
-            'name':c.name,
-            'description':c.category_id,
-            'parent_category_id':c.description,
-            'created_at':c.price,
+        category.append({
+            'id':categor.id,
+            'name':categor.name,
+            'description':categor.description,
+            'parent_category_id':categor.parent_category_id,
+            'created_at':categor.created_at,
             
         })
 
-    response = jsonify(c)
+    response = jsonify(category)
     response.headers['Access-Control-Expose-Headers'] = 'Content-Range'
-    response.headers['Content-Range'] = len(c)
+    response.headers['Content-Range'] = len(category)
     return response
 
 
-# @blueprint.route('/product', methods=["POST"])
-# def product_create():
-#     # Get information at form
-#     name = request.form.get('name', "").strip()
-#     description = request.form.get('description', "").strip()
-#     price = request.form.get('price', "").strip()
-#     category_id = int(request.form.get('category_id', "").strip())
-#     imagefile = request.files.get('image')
-#     filename = imagefile.filename
+@blueprint.route('/category', methods=["POST"])
+def category_create():
+    # Get information at form
+    name = request.json.get('name', "").strip()
+    description = request.json.get('description', "").strip()
+    parent_category_id = request.json.get('parent_category_id', "").strip()
 
-#     if imagefile:
-#         imagefile.save(os.path.join(UPLOAD_FOLDER, filename))
-#         product = Product(name =name,description =description,price = price,category_id = category_id,image=filename)
-#     else:
-#         product = Product(name =name,description =description,price = price,category_id = category_id)
+    New_category = Category(name =name,description =description,parent_category_id = parent_category_id)
 
-#     db.session.add(product)
-#     db.session.commit()
-#     return jsonify({
-#             'category_id':product.category_id,
-#             'id':product.id,
-#             'name':product.name,
-#             'description':product.description,
-#             'price':product.price,
-#             'image':product.image
-#         })
+
+    db.session.add(New_category)
+    db.session.commit()
+    return jsonify({
+            'id':New_category.id,
+            'name':New_category.name,
+            'description':New_category.description,
+            'parent_category_id':New_category.parent_category_id,
+        })
     
     
-# @blueprint.route('/product/<int:id>', methods=["DELETE"])
-# def DELETE_one_product(id):
-#     product = Product.query.get_or_404(id)
-#     db.session.delete(product)
-#     db.session.commit()
-#     product = {
-#         "id": product.id,
-#         'name': product.name,
-#         'description': product.description,
-#         'price': product.price,
-#         'image':product.image
-#     }
-#     return jsonify(product)
+@blueprint.route('/category/<int:id>', methods=["DELETE"])
+def DELETE_category(id):
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    category = {
+        "id": category.id,
+        'name': category.name,
+        'description': category.description,
+        'parent_category_id': category.parent_category_id,
+    }
+    return jsonify(category)
 
 
-# @blueprint.route('/product/<int:id>', methods=["GET"])
-# def show_one_product(id):
-#     one_product = Product.query.get_or_404(id)
-#     if one_product is None:
-#         return '', 404
-#     return jsonify({
-#         "id":id,
-#         'name':one_product.name,
-#         'description':one_product.description,
-#         'price':one_product.price,
-#         'image':one_product.image
-#     })
+@blueprint.route('/category/<int:id>', methods=["GET"])
+def show_one_category(id):
+    one_categoryt = Category.query.get_or_404(id)
+    if one_categoryt is None:
+        return '', 404
+    return jsonify({
+        "id":id,
+        'name':one_categoryt.name,
+        'description':one_categoryt.description,
+        'parent_category_id':one_categoryt.parent_category_id,
+    })
 
 
 
-# @blueprint.route('/product/<int:id>', methods=["PUT"])
-# def update_product(id):
-#     # Check if product exists
-#     product_want_update = Product.query.get_or_404(id)
+@blueprint.route('/category/<int:id>', methods=["PUT"])
+def update_category(id):
+    # Check if category exists
+    category_want_update = Category.query.get_or_404(id)
 
     
-#     # Update product data
-#     name = request.form.get('name', "").strip()
-#     description = request.form.get('description', "").strip()
-#     price = request.form.get('price', "").strip()
-#     category_id = request.form.get('category_id', "").strip()
-#     image = request.files.get('image')  
-#     filename = image.filename
+    # Update category data
+    name = request.json.get('name', "").strip()
+    description = request.json.get('description', "").strip()
+    parent_category_id = int(request.json.get('parent_category_id', "").strip())
     
-#     # Update product data if provided
-#     if name and description and price:
-#         if image:
-#             image.save(os.path.join(UPLOAD_FOLDER, filename))
-#             product = Product(name =name,description =description,price = price,category_id = category_id,image=filename)
-#         else:
-#             product = Product(name =name,description =description,price = price,category_id = category_id)
-#     # put information
-#     product_want_update.name = product.name
-#     product_want_update.description = product.description
-#     product_want_update.price = product.price
-#     product_want_update.category_id = product.category_id
-#     product_want_update.image = filename
-    
-#     db.session.commit()
-#     return jsonify({
-#         "id":id,
-#         'name':product_want_update.name,
-#         'description':product_want_update.description,
-#         'price':product_want_update.price,
-#         'image':product_want_update.image
-#     })
+    # Update category data if provided
+    if name and description and parent_category_id:
+        category = Category(name =name,description =description,parent_category_id = parent_category_id)
+    # put information
+    category_want_update.name = category.name
+    category_want_update.description = category.description
+    category_want_update.parent_category_id = category.parent_category_id
+
+    db.session.commit()
+    return jsonify({
+        "id":id,
+        'name':category_want_update.name,
+        'description':category_want_update.description,
+        'parent_category_id':category_want_update.parent_category_id,
+    })

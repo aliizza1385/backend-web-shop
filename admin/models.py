@@ -1,4 +1,4 @@
-from admin.Categori.models import Categori
+from admin.Categori.models import Category
 from admin.Customers.models import Customer
 from admin.Feedbacks.models import Feedback
 from admin.Logs.models import Logs
