@@ -28,20 +28,6 @@ def orders():
     return response
 
 
-# @blueprint.route('/order/<int:id>', methods=["GET"])
-# def show_one_user(id):
-#     one_order = Orders.query.get_or_404(id)
-#     if one_order is None:
-#         return '', 404
-#     return jsonify({
-#           "id":one_order.id,
-#             'products':one_order.products.name,
-#             # 'order_details':one_order.order_details.quantity,
-#             'status':one_order.status,
-#             # 'unit_price':one_order.order_details.unit_price,
-#     })
-
-
 
 @blueprint.route('/order/<int:id>', methods=["GET"])
 def show_one_order(id):
