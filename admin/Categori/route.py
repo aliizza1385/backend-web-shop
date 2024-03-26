@@ -7,6 +7,7 @@ from initialize import db
 blueprint = Blueprint('category', __name__)
 
 
+# this for Show list category
 
 @blueprint.route('/category', methods=["GET"])
 def category():
@@ -28,6 +29,8 @@ def category():
     return response
 
 
+# this for create category
+
 @blueprint.route('/category', methods=["POST"])
 def category_create():
     # Get information at form
@@ -46,8 +49,11 @@ def category_create():
             'description':New_category.description,
             'parent_category_id':New_category.parent_category_id,
         })
+
+
     
-    
+# this for DELETE_category
+
 @blueprint.route('/category/<int:id>', methods=["DELETE"])
 def DELETE_category(id):
     category = Category.query.get_or_404(id)
@@ -62,6 +68,9 @@ def DELETE_category(id):
     return jsonify(category)
 
 
+
+# this for show one category
+
 @blueprint.route('/category/<int:id>', methods=["GET"])
 def show_one_category(id):
     one_categoryt = Category.query.get_or_404(id)
@@ -75,6 +84,8 @@ def show_one_category(id):
     })
 
 
+
+# this for update category
 
 @blueprint.route('/category/<int:id>', methods=["PUT"])
 def update_category(id):

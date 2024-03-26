@@ -31,7 +31,6 @@ def customers():
             'email':customer_in_for.email,
             'phone_number':customer_in_for.phone_number,
             'registration_date':customer_in_for.registration_date,
-            # 'password':customer.password
         })
     response = jsonify(all_customers)
     response.headers['Access-Control-Expose-Headers'] = 'Content-Range'

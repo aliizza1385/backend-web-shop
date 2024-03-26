@@ -20,6 +20,7 @@ app.register_blueprint(product_blueprint)
 app.register_blueprint(user_blueprint)
 app.register_blueprint(categori_blueprint)
 app.register_blueprint(feedbacks_blueprint)
+app.register_blueprint(address_blueprint)
 
 
 

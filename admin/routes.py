@@ -4,3 +4,4 @@ from admin.Users.route import blueprint as user_blueprint
 from admin.Orders.route import blueprint as order_blueprint
 from admin.Categori.route import blueprint as categori_blueprint
 from admin.Feedbacks.route import blueprint as feedbacks_blueprint
+from admin.Address.route import blueprint as address_blueprint
