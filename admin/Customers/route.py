@@ -50,6 +50,7 @@ def show_one_product(id):
         'email': one_customer.email,
         'phone_number': one_customer.phone_number,
         'registration_date': one_customer.registration_date,
+        'password': one_customer.password,
     })
 
 
@@ -103,23 +104,25 @@ def create_customer():
     username = request.json.get('username', "").strip()
     email = request.json.get('email', "").strip()
     phone_number = request.json.get('phone_number', "").strip()
-    # password = request.json.get('password', "").strip()
+    password = request.json.get('password', "").strip()
 
     # Get all user in db
     All_db_customer = Customer.query.all()
     
     # check this customer have or not
     have_or_not_username = Customer.query.filter_by(username = username).first()
-    have_or_not_email = Customer.query.filter_by(username = username).first()
+    have_or_not_email = Customer.query.filter_by(email = email).first()
     
+
+
     if have_or_not_username:
-        username = username + ' copy'
+        username = username + '_copy'
     if have_or_not_email:
-        email = 'copy ' + email
+        email = 'copy_' + email
 
 
     # Create a new user and save it to the database
-    new_user = Customer(username=username, email=email, phone_number=phone_number)
+    new_user = Customer(username=username, email=email, phone_number=phone_number,password = password)
     db.session.add(new_user)
     db.session.commit()
 
@@ -129,6 +132,7 @@ def create_customer():
         'username': new_user.username,
         'email': new_user.email,
         'phone_number': new_user.phone_number,
+        'password': new_user.password,
     })
 
 
