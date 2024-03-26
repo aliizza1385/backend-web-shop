@@ -30,36 +30,30 @@ def feedback():
     return response
 
 
-# @blueprint.route('/customers/<int:id>', methods=["GET"])
-# def show_one_product(id):
-#     one_customer = Customer.query.get_or_404(id)
-#     if one_customer is None:
-#         return '', 404
-#     return jsonify({
-#         "id":one_customer.id,
-#         'username': one_customer.username,
-#         'email': one_customer.email,
-#         'phone_number': one_customer.phone_number,
-#         'registration_date': one_customer.registration_date,
-#         'password': one_customer.password,
-#     })
+@blueprint.route('/feedback/<int:id>', methods=["GET"])
+def show_one_feedback(id):
+    one_feedback = Feedback.query.get_or_404(id)
+    if one_feedback is None:
+        return '', 404
+    return jsonify({
+        "id":one_feedback.id,
+        'usernmae': one_feedback.customer.username,
+        'comment': one_feedback.comment,
+        'rating': one_feedback.rating,
+    })
 
 
 
-    
 
+def get_comments_by_post_id(post_id):
+    return Comment.query.filter_by(post_id=post_id).all()
 
+def getManyReference(resource, params):
+    target = params['target']
+    id = params['id']
 
-# @blueprint.route('/customers/<int:id>', methods=["DELETE"])
-# def DELETE_one_customer(id):
-#     customer = Customer.query.get_or_404(id)
-#     db.session.delete(customer)
-#     db.session.commit()
-#     customer = {
-#         "id": customer.id,
-#         'username': customer.username,
-#         'email': customer.email,
-#         'phone_number': customer.phone_number,
-#     }
-#     return jsonify(customer)
-    
+    if resource == 'posts' and target == 'comments':
+        comments = get_comments_by_post_id(id)
+        return jsonify(data=[{'id': comment.id, 'title': comment.title, 'body': comment.body} for comment in comments])
+
+    return '', 404
