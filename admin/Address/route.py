@@ -80,7 +80,6 @@ def address_update(id):
 
 
 
-
 @blueprint.route('/address/<int:id>', methods=["DELETE"])
 def DELETE_one_address(id):
     address = Address.query.get_or_404(id)

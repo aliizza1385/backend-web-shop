@@ -126,4 +126,20 @@ def DELETE_one_user(id):
         'email': user.email,
     }
     return jsonify(user)
+
+
+@blueprint.route('/admin/login', methods=["POST","GET"])
+def login_one_user(id):
+    username = request.json.get('username', "").strip()
+    password = request.json.get('password', "").strip()
+    user = User.query.filter(username = username).first()
     
+    if user.password == password:
+        user = {
+            "id": user.id,
+            'username': user.username,
+            'password': user.password,
+            'email': user.email,
+        }
+        return jsonify(user)
+

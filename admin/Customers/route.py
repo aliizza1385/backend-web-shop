@@ -20,6 +20,7 @@ def get_customer(id):
     return final_customer
     
 
+
 @blueprint.route('/customers', methods=["GET"])
 def customers():
     customers = Customer.query.all()
@@ -32,6 +33,7 @@ def customers():
             'phone_number':customer_in_for.phone_number,
             'registration_date':customer_in_for.registration_date,
         })
+
     response = jsonify(all_customers)
     response.headers['Access-Control-Expose-Headers'] = 'Content-Range'
     response.headers['Content-Range'] = len(all_customers)
@@ -39,7 +41,7 @@ def customers():
 
 
 @blueprint.route('/customers/<int:id>', methods=["GET"])
-def show_one_product(id):
+def show_one_customer(id):
     one_customer = Customer.query.get_or_404(id)
     if one_customer is None:
         return '', 404
@@ -148,4 +150,3 @@ def DELETE_one_customer(id):
         'phone_number': customer.phone_number,
     }
     return jsonify(customer)
-    
