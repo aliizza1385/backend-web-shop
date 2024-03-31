@@ -7,7 +7,6 @@ blueprint = Blueprint('login_admin', __name__)
 
 @blueprint.route('/login',methods=["POST"])
 def login():
-    
     username = request.json.get('username').strip()
     password = request.json.get('password').strip()
     user = User.query.filter_by(username=username).first()

@@ -1,7 +1,8 @@
-import os
 from flask import Blueprint, jsonify, request
 from .models import Category
-from initialize import db
+from initialize import 
+from admin.Logs.route import get_log_and_save_then
+
 
 
 blueprint = Blueprint('category', __name__)

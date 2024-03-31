@@ -41,19 +41,3 @@ def show_one_feedback(id):
         'comment': one_feedback.comment,
         'rating': one_feedback.rating,
     })
-
-
-
-
-def get_comments_by_post_id(post_id):
-    return Comment.query.filter_by(post_id=post_id).all()
-
-def getManyReference(resource, params):
-    target = params['target']
-    id = params['id']
-
-    if resource == 'posts' and target == 'comments':
-        comments = get_comments_by_post_id(id)
-        return jsonify(data=[{'id': comment.id, 'title': comment.title, 'body': comment.body} for comment in comments])
-
-    return '', 404

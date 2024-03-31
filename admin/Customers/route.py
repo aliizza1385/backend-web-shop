@@ -3,6 +3,7 @@ from .models import Customer
 from flask_bcrypt import generate_password_hash
 from werkzeug.exceptions import BadRequest
 from initialize import db
+from admin.Logs.route import get_log_and_save_then
 
 
 blueprint = Blueprint('customer', __name__)
@@ -15,7 +16,7 @@ def get_customer(id):
         "email": customer_want_update.email,
         "phone": customer_want_update.phone_number,
         "registration_date": customer_want_update.registration_date,
-        # "password": customer_want_update.password,
+        "password": customer_want_update.password,
     }
     return final_customer
     
@@ -67,19 +68,24 @@ def update_customer(id):
     # Get data from request
     data = request.get_json()
     
+    
     # Update customer data
     username = request.json.get('username', "").strip()
     email = request.json.get('email', "").strip()
     phone_number = request.json.get('phone_number', "").strip()
-    # registration_date = data.get('registration_date', None)
+    password = request.json.get('password', "").strip()
+    
+    
     
     # check username and email unic
     for i in all_data:
         if i.id != id and i.username == username:
-            username = username + ' copy'
+            username = username + '_copy'
     for i in all_data:
         if i.id != id and i.email == email:
-            email =  'copy ' + email 
+            email =  'copy_' + email 
+
+    
     
     # Update customer data if provided
     if username:
@@ -88,6 +94,16 @@ def update_customer(id):
         customer_want_update.email = email
     if phone_number:
         customer_want_update.phone_number = phone_number
+    if password:
+        customer_want_update.password = password
+        
+        
+        
+    # get id admin to want to do work
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update Customer {customer_want_update.id}', user_id, Ip_address )
+    
     
     db.session.commit()
     return jsonify({
@@ -95,6 +111,7 @@ def update_customer(id):
         'username':customer_want_update.username,
         'email':customer_want_update.email,
         'phone_number':customer_want_update.phone_number,
+        'password':customer_want_update.password,
     })
 
     
@@ -126,6 +143,12 @@ def create_customer():
     new_user = Customer(username=username, email=email, phone_number=phone_number,password = password)
     db.session.add(new_user)
     db.session.commit()
+    
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Create Customer: {new_user.id}', user_id, Ip_address )
 
     # Return a success message
     return jsonify({
@@ -143,6 +166,12 @@ def DELETE_one_customer(id):
     customer = Customer.query.get_or_404(id)
     db.session.delete(customer)
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete Customer: {id}', user_id, Ip_address )
+    
     customer = {
         "id": customer.id,
         'username': customer.username,
