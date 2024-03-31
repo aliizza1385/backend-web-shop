@@ -3,6 +3,7 @@ from .models import Address
 from flask_bcrypt import generate_password_hash
 from werkzeug.exceptions import BadRequest
 from initialize import db
+from admin.Logs.route import get_log_and_save_then
 
 
 blueprint = Blueprint('address', __name__)
@@ -65,6 +66,13 @@ def address_update(id):
     address_want_update.postal_code = request.json.get('postal_code', "").strip()
     
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update Address: {id}', user_id, Ip_address )
+    
+    
     return jsonify({
         "id": address_want_update.id,
         'customer_id': address_want_update.customer_id,
@@ -85,6 +93,12 @@ def DELETE_one_address(id):
     address = Address.query.get_or_404(id)
     db.session.delete(address)
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete Address: {id}', user_id, Ip_address )
     address = {
         "id": address.id,
         'customer_id': address.customer_id,
