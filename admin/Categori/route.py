@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from .models import Category
-from initialize import 
+from initialize import db
 from admin.Logs.route import get_log_and_save_then
 
 
@@ -41,9 +41,14 @@ def category_create():
 
     New_category = Category(name =name,description =description,parent_category_id = parent_category_id)
 
-
+   # get id admin to want to do work and ip then
     db.session.add(New_category)
     db.session.commit()
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Create category: {New_category.id}', user_id, Ip_address )
+    
+    
     return jsonify({
             'id':New_category.id,
             'name':New_category.name,
@@ -60,6 +65,12 @@ def DELETE_category(id):
     category = Category.query.get_or_404(id)
     db.session.delete(category)
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete category: {id}', user_id, Ip_address )
+    
     category = {
         "id": category.id,
         'name': category.name,
@@ -97,17 +108,24 @@ def update_category(id):
     # Update category data
     name = request.json.get('name', "").strip()
     description = request.json.get('description', "").strip()
-    parent_category_id = int(request.json.get('parent_category_id', "").strip())
+    parent_category_id = request.json.get('parent_category_id', "").strip()
     
     # Update category data if provided
-    if name and description and parent_category_id:
-        category = Category(name =name,description =description,parent_category_id = parent_category_id)
-    # put information
-    category_want_update.name = category.name
-    category_want_update.description = category.description
-    category_want_update.parent_category_id = category.parent_category_id
+    if name:
+        category_want_update.name = name 
+    if description:
+        category_want_update.description = description
+    if parent_category_id:
+        category_want_update.parent_category_id = parent_category_id
 
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update category: {id}', user_id, Ip_address )
+    
+    
     return jsonify({
         "id":id,
         'name':category_want_update.name,
