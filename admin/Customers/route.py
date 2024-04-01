@@ -100,9 +100,8 @@ def update_customer(id):
         
         
     # get id admin to want to do work
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Update Customer {customer_want_update.id}', user_id, Ip_address )
+    get_log_and_save_then(f'Update Customer {customer_want_update.id}', Ip_address )
     
     
     db.session.commit()
@@ -146,9 +145,8 @@ def create_customer():
     
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Create Customer: {new_user.id}', user_id, Ip_address )
+    get_log_and_save_then(f'Create Customer: {new_user.id}', Ip_address )
 
     # Return a success message
     return jsonify({
@@ -168,9 +166,8 @@ def DELETE_one_customer(id):
     db.session.commit()
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Delete Customer: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Delete Customer: {id}', Ip_address )
     
     customer = {
         "id": customer.id,

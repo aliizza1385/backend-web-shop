@@ -68,9 +68,8 @@ def address_update(id):
     db.session.commit()
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Update Address: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Update Address: {id}', Ip_address )
     
     
     return jsonify({
@@ -96,9 +95,8 @@ def DELETE_one_address(id):
     
     # get id admin to want to do work and ip then
     
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Delete Address: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Delete Address: {id}', Ip_address )
     address = {
         "id": address.id,
         'customer_id': address.customer_id,

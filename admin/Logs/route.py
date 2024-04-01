@@ -8,9 +8,9 @@ from initialize import db
 blueprint = Blueprint('Logs', __name__)
 
 
-def get_log_and_save_then(action,user_id,ip_address):
-
-
+def get_log_and_save_then(action,ip_address):
+    
+    user_id = request.headers.get("user")
     # Create a new log and save it to the database
     new_Logs = Logs(action=action, user_id=user_id, ip_address=ip_address)
     db.session.add(new_Logs)

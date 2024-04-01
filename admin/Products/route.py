@@ -5,6 +5,8 @@ from flask import send_from_directory
 from .models import Product
 from initialize import db
 from config import UPLOAD_FOLDER
+from admin.Logs.route import get_log_and_save_then
+
 
 blueprint = Blueprint('product', __name__)
 
@@ -56,6 +58,12 @@ def product_create():
 
     db.session.add(product)
     db.session.commit()
+    
+    
+    # get id admin to want to do work and ip then
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Create Product: {product.id}', Ip_address )
+    
     return jsonify({
             'category_id':product.category_id,
             'id':product.id,
@@ -71,6 +79,11 @@ def DELETE_one_product(id):
     product = Product.query.get_or_404(id)
     db.session.delete(product)
     db.session.commit()
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete Product: {id}', user_id, Ip_address )
     product = {
         "id": product.id,
         'name': product.name,
@@ -125,6 +138,12 @@ def update_product(id):
     product_want_update.image = filename
     
     db.session.commit()
+    
+    
+    # get id admin to want to do work and ip then
+    user_id = request.headers.get("user")
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update Product: {id}', user_id, Ip_address )
     return jsonify({
         "id":id,
         'name':product_want_update.name,

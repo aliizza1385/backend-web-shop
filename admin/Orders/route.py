@@ -4,7 +4,7 @@ from flask_bcrypt import generate_password_hash
 from werkzeug.exceptions import BadRequest
 from initialize import db
 from admin.OrderItem.models import OrderItem
-
+from admin.Logs.route import get_log_and_save_then
 
 blueprint = Blueprint('order', __name__)
     
@@ -59,7 +59,11 @@ def update_order(id):
     if status:
         order_update.status = status
         db.session.commit()
-
+    # get id admin to want to do work and ip then
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update Order: {id}', Ip_address )
+    
+    
     return jsonify({
         "id":order_update.id,
         'order_date':order_update.order_date,
@@ -79,6 +83,11 @@ def DELETE_one_order(id):
     order = Order.query.get_or_404(id)
     db.session.delete(order)
     db.session.commit()
+    # get id admin to want to do work and ip then
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete Order: {id}', Ip_address )
+    
+    
     order = {
         "id":order.id,
         'order_date':order.order_date,

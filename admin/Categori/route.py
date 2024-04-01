@@ -41,12 +41,11 @@ def category_create():
 
     New_category = Category(name =name,description =description,parent_category_id = parent_category_id)
 
-   # get id admin to want to do work and ip then
     db.session.add(New_category)
     db.session.commit()
-    user_id = request.headers.get("user")
+   # get id admin to want to do work and ip then
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Create category: {New_category.id}', user_id, Ip_address )
+    get_log_and_save_then(f'Create category: {New_category.id}', Ip_address )
     
     
     return jsonify({
