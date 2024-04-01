@@ -28,7 +28,6 @@ def orders():
     return response
 
 
-
 @blueprint.route('/order/<int:id>', methods=["GET"])
 def show_one_order(id):
     one_order = Order.query.get_or_404(id)
@@ -75,10 +74,7 @@ def update_order(id):
     })
 
 
-
-
-
-@blueprint.route('/users/<int:id>', methods=["DELETE"])
+@blueprint.route('/order/<int:id>', methods=["DELETE"])
 def DELETE_one_order(id):
     order = Order.query.get_or_404(id)
     db.session.delete(order)

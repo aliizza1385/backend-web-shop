@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,jsonify
 from initialize import db
 from flask_cors import CORS
 from admin.routes import *

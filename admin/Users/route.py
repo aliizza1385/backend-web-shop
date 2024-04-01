@@ -3,10 +3,30 @@ from .models import User
 from flask_bcrypt import generate_password_hash
 from werkzeug.exceptions import BadRequest
 from initialize import db
+from admin.Logs.route import get_log_and_save_then
 
 
 blueprint = Blueprint('user', __name__)
 
+
+
+
+@blueprint.route('/users/<int:id>', methods=["DELETE"])
+def DELETE_one_user(id):
+    print('ali')
+    user = User.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    # get id admin to want to do work and ip then
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Delete User: {id}', Ip_address )
+    user = {
+        "id": user.id,
+        'username': user.username,
+        'password_hash': user.password_hash,
+        'email': user.email,
+    }
+    return jsonify(user)
 
 
 @blueprint.route('/users', methods=["GET"])
@@ -34,7 +54,7 @@ def show_one_user(id):
     return jsonify({
         "id":one_user.id,
         'username': one_user.username,
-        'password_hash': one_user.password_hash,
+        'password': one_user.password_hash,
         'email': one_user.email,
 
     })
@@ -63,12 +83,15 @@ def update_user(id):
             password_hash =  'copy_' + password_hash 
     
     # Update user data if provided
-    if username and password_hash and email:
-        user_want_update.username = username
-        user_want_update.password_hash = password_hash
-        user_want_update.email = email
+    user_want_update.username = username
+    user_want_update.password_hash = password_hash
+    user_want_update.email = email
     
-        db.session.commit()
+    db.session.commit()
+    
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Update User: {user_want_update.id}', Ip_address )
+        
     return jsonify({
         "id":id,
         'username':user_want_update.username,
@@ -103,7 +126,9 @@ def create_user():
     new_user = User(username=username, password_hash=password_hash, email=email)
     db.session.add(new_user)
     db.session.commit()
-
+    # get id admin to want to do work and ip then
+    Ip_address = request.remote_addr
+    get_log_and_save_then(f'Create User: {new_user.id}', Ip_address )
     # Return a success message
     return jsonify({
         "id": new_user.id,
@@ -112,20 +137,6 @@ def create_user():
         'email': new_user.email,
     })
 
-
-
-@blueprint.route('/users/<int:id>', methods=["DELETE"])
-def DELETE_one_user(id):
-    user = User.query.get_or_404(id)
-    db.session.delete(user)
-    db.session.commit()
-    user = {
-        "id": user.id,
-        'username': user.username,
-        'password_hash': user.password_hash,
-        'email': user.email,
-    }
-    return jsonify(user)
 
 
 @blueprint.route('/admin/login', methods=["POST","GET"])
