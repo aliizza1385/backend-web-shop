@@ -8,27 +8,6 @@ import ast
 blueprint = Blueprint('payment', __name__)
 
 
-# def search_payment():
-#     # Get the search query from the request
-#     search_query = request.args.get('name', '')
-
-#     # Query the database to filter payments based on the search query
-#     filtered_payments = Payment.query.filter(Payment.order_id.ilike(f'%{search_query}%')).all()
-
-#     # Convert the filtered payments to a list of dictionaries
-#     for payment in filtered_payments:
-#         result = [
-#             {
-#                 "id": payment.id,
-#                 "order_id": payment.order_id,
-#                 "payment_method": payment.payment_method,
-#                 "amount": payment.amount,
-#                 # "payment_date": payment.payment_date.strftime('%Y-%m-%d')
-#             }
-#         ]
-
-#     return jsonify(result)
-
 @blueprint.route('/payment', methods=["GET"])
 def payment():
     try:

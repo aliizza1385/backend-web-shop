@@ -81,9 +81,8 @@ def DELETE_one_product(id):
     db.session.commit()
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Delete Product: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Delete Product: {id}', Ip_address )
     product = {
         "id": product.id,
         'name': product.name,
@@ -104,7 +103,8 @@ def show_one_product(id):
         'name':one_product.name,
         'description':one_product.description,
         'price':one_product.price,
-        'image':one_product.image
+        'image':one_product.image,
+        'category_id':one_product.category_id
     })
 
 
@@ -121,33 +121,34 @@ def update_product(id):
     price = request.form.get('price', "").strip()
     category_id = request.form.get('category_id', "").strip()
     image = request.files.get('image')  
-    filename = image.filename
+
     
-    # Update product data if provided
-    if name and description and price:
-        if image:
-            image.save(os.path.join(UPLOAD_FOLDER, filename))
-            product = Product(name =name,description =description,price = price,category_id = category_id,image=filename)
-        else:
-            product = Product(name =name,description =description,price = price,category_id = category_id)
-    # put information
-    product_want_update.name = product.name
-    product_want_update.description = product.description
-    product_want_update.price = product.price
-    product_want_update.category_id = product.category_id
-    product_want_update.image = filename
+    if name:
+        product_want_update.name = name
+    if image:
+        filename = image.filename
+        image.save(os.path.join(UPLOAD_FOLDER, filename))
+        product_want_update.image = filename
+    if description:
+        product_want_update.description = description
+    if price:
+        product_want_update.price = price
+    if category_id:
+        product_want_update.category_id = category_id
+
     
     db.session.commit()
     
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
-    Ip_address = request.remote_addr
-    get_log_and_save_then(f'Update Product: {id}', user_id, Ip_address )
+    ip_address = request.remote_addr
+    get_log_and_save_then(f'Update Product: {product_want_update.id}', ip_address )
+    
     return jsonify({
         "id":id,
         'name':product_want_update.name,
         'description':product_want_update.description,
         'price':product_want_update.price,
-        'image':product_want_update.image
+        'image':product_want_update.image,
+        'category_id':product_want_update.category_id
     })
