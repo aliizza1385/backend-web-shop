@@ -42,6 +42,7 @@ def show_one_order(id):
         'order_date':one_order.order_date,
         'status':one_order.status,
         'customer':one_order.customer.username,
+        'total_amount':one_order.total_amount,
         'items':All_order_item
     })
 
@@ -89,6 +90,6 @@ def DELETE_one_order(id):
         'order_date':order.order_date,
         'total_amount':order.total_amount,
         'status':order.status,
-        'customer':order.customer.username,
+        'customer_id':order.customer_id,
     }
-    return jsonify(user)
+    return jsonify(order)
