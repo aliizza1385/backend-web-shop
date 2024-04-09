@@ -2,7 +2,7 @@ from flask import Flask,jsonify
 from initialize import db
 from flask_cors import CORS
 from admin.routes import *
-
+from customer_viwe.route import *
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -15,6 +15,8 @@ db.init_app(app)
 
 
 app.register_blueprint(customer_bluprint)
+app.register_blueprint(login)
+app.register_blueprint(customer_viwe)
 app.register_blueprint(order_blueprint)
 app.register_blueprint(product_blueprint)
 app.register_blueprint(user_blueprint)
@@ -24,6 +26,7 @@ app.register_blueprint(address_blueprint)
 app.register_blueprint(payments_blueprint)
 app.register_blueprint(login_admin)
 app.register_blueprint(log_blueprint)
+app.register_blueprint(kpi_blueprint)
 
 
 

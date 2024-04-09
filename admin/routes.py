@@ -8,3 +8,4 @@ from admin.Address.route import blueprint as address_blueprint
 from admin.Payments.route import blueprint as payments_blueprint
 from admin.login.route import blueprint as login_admin
 from admin.Logs.route import blueprint as log_blueprint
+from admin.Kpi.route import blueprint as kpi_blueprint

@@ -103,7 +103,7 @@ def show_one_product(id):
         'name':one_product.name,
         'description':one_product.description,
         'price':one_product.price,
-        'image':one_product.image,
+        'image' : 'http://localhost:5000/'+'uploads/'+ one_product.image,
         'category_id':one_product.category_id
     })
 

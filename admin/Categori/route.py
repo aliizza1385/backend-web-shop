@@ -66,9 +66,8 @@ def DELETE_category(id):
     db.session.commit()
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Delete category: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Delete category: {id}', Ip_address )
     
     category = {
         "id": category.id,
@@ -120,9 +119,8 @@ def update_category(id):
     db.session.commit()
     
     # get id admin to want to do work and ip then
-    user_id = request.headers.get("user")
     Ip_address = request.remote_addr
-    get_log_and_save_then(f'Update category: {id}', user_id, Ip_address )
+    get_log_and_save_then(f'Update category: {id}', Ip_address )
     
     
     return jsonify({
