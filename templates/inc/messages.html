@@ -1,0 +1,16 @@
+    
+
+
+{% with massages = get_flashed_messages(with_categories=true) %}
+    
+    {% if massages %}
+        <div class="container rounded-0 p-0">
+            {% for cat,msg in massages %}
+                <div class="alert mx-0 alert-{{ cat }}" role="alert">{{ msg }}</div>
+            {% endfor %}
+        </div>
+            
+    {% endif %}
+        
+{% endwith %}
+    

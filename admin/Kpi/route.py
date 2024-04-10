@@ -13,11 +13,11 @@ def KPI():
     c = conn.cursor()
 
     # total_sales = c.fetchone()
-    c.execute('''SELECT DATE(o.order_date) as order_date, SUM(od.quantity) as total_sales
-             FROM orderItem od
-             JOIN order o ON od.order_id = o.id
-             GROUP BY DATE(o.order_date)
-             ORDER BY DATE(o.order_date)''')
+    c.execute('''SELECT DATE(order.order_date) as order_date, SUM(order_Item.quantity) as total_sales
+             FROM order_Item 
+             JOIN order ON order_Item.order_id = order.id
+             GROUP BY DATE(order.order_date)
+             ORDER BY DATE(order.order_date)''')
     total_sales_by_date = c.fetchall()
     total_sales_data = [{"date": row[0], "total_sales": row[1]} for row in total_sales_by_date]
 

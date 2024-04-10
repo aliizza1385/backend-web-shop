@@ -5,6 +5,6 @@ blueprint = Blueprint('main', __name__)
 
 
 
-@blueprint.route('/main')
-def home():
-    return render_template('main.html')
+# @blueprint.route('/main')
+# def home():
+#     return render_template('main.html')
