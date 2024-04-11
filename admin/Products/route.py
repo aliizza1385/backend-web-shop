@@ -4,8 +4,10 @@ from werkzeug.utils import secure_filename
 from flask import send_from_directory
 from .models import Product
 from initialize import db
-from config import UPLOAD_FOLDER
+from config import UPLOAD_FOLDER, localhost
 from admin.Logs.route import get_log_and_save_then
+from admin.Categori.models import Category
+import random
 
 
 blueprint = Blueprint('product', __name__)
@@ -29,7 +31,7 @@ def product():
             'category_id':product.category_id,
             'description':product.description,
             'price':product.price,
-            'image' : 'http://localhost:5000/'+'uploads/'+ product.image
+            'image' : localhost+'uploads/'+ product.image
             
         })
 
@@ -49,29 +51,36 @@ def product_create():
     category_id = int(request.form.get('category_id', "").strip())
     imagefile = request.files.get('image')
     filename = imagefile.filename
+    
+    
+    c = Category.query.get_or_404(category_id)
+    if c.parent_category_id != None:
+        if imagefile:
+            imagefile.save(os.path.join(UPLOAD_FOLDER, filename))
+            # random_number = random.randint(1, 100000)
+            product = Product(name =name,description =description,price = price,category_id = category_id,image=filename)
+        else:
+            product = Product(name =name,description =description,price = price,category_id = category_id)
 
-    if imagefile:
-        imagefile.save(os.path.join(UPLOAD_FOLDER, filename))
-        product = Product(name =name,description =description,price = price,category_id = category_id,image=filename)
+        db.session.add(product)
+        db.session.commit()
+        
+        
+        # get id admin to want to do work and ip then
+        Ip_address = request.remote_addr
+        get_log_and_save_then(f'Create Product: {product.id}', Ip_address )
+        
+        return jsonify({
+                'category_id':product.category_id,
+                'id':product.id,
+                'name':product.name,
+                'description':product.description,
+                'price':product.price,
+                'image':product.image
+            })
     else:
-        product = Product(name =name,description =description,price = price,category_id = category_id)
+        return 404
 
-    db.session.add(product)
-    db.session.commit()
-    
-    
-    # get id admin to want to do work and ip then
-    Ip_address = request.remote_addr
-    get_log_and_save_then(f'Create Product: {product.id}', Ip_address )
-    
-    return jsonify({
-            'category_id':product.category_id,
-            'id':product.id,
-            'name':product.name,
-            'description':product.description,
-            'price':product.price,
-            'image':product.image
-        })
     
     
 @blueprint.route('/product/<int:id>', methods=["DELETE"])
@@ -103,7 +112,7 @@ def show_one_product(id):
         'name':one_product.name,
         'description':one_product.description,
         'price':one_product.price,
-        'image' : 'http://localhost:5000/'+'uploads/'+ one_product.image,
+        'image' : localhost+'uploads/'+ one_product.image,
         'category_id':one_product.category_id
     })
 

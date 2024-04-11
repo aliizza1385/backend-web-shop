@@ -15,6 +15,7 @@ db.init_app(app)
 
 
 app.register_blueprint(customer_bluprint)
+app.register_blueprint(shop)
 app.register_blueprint(login)
 app.register_blueprint(customer_viwe)
 app.register_blueprint(order_blueprint)

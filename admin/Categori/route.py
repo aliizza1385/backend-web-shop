@@ -37,8 +37,10 @@ def category_create():
     # Get information at form
     name = request.json.get('name', "").strip()
     description = request.json.get('description', "").strip()
-    parent_category_id = request.json.get('parent_category_id', "").strip()
+    parent_category_id = request.json.get('parent_category_id', None)  # Set to None if not provided
 
+    if parent_category_id:
+        print(' parent_category_id')
     New_category = Category(name =name,description =description,parent_category_id = parent_category_id)
 
     db.session.add(New_category)
