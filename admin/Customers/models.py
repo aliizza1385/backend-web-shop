@@ -19,3 +19,8 @@ class Customer(db.Model):
     feedbacks = db.relationship('Feedback',cascade='all, delete-orphan', backref='customer', lazy=True)
     address = db.relationship('Address',cascade='all, delete-orphan', backref='customer', lazy=True)
     
+    def __repr__(self):
+        return '<Customer %r>' % self.id
+    
+    
+    

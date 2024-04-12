@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
+
     <!-- Css Styles -->
 
 	<link rel="stylesheet" href="{{ url_for('static', filename='Shop/css/bootstrap.min.css') }}">
@@ -24,13 +25,9 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='Shop/css/slicknav.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='Shop/css/style.css') }}">
 
-
-
 </head>
 
 <body>
-    {% include 'inc/messages.html' %}
-
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -66,7 +63,7 @@
             <div class="row">
                 <div class="col-xl-3 col-lg-2">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="static/Shop/img/logo.png" alt=""></a>
+                        <a href="./index.html"><img src="{{ url_for('static', filename = 'shop/img/logo.png') }}" alt=""></a>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-7">
@@ -80,8 +77,8 @@
                 <div class="col-lg-3">
                     <div class="header__right">
                         <div class="header__right__auth">
-                            <a href="login">Login</a>
-                            <a href="register">Register</a>
+                            <a href="#">Login</a>
+                            <a href="#">Register</a>
                         </div>
                         <ul class="header__right__widget">
                             <li><a href="#"><span class="icon_bag_alt"></span>
@@ -105,7 +102,8 @@
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
                         <a href="./index.html"><i class="fa fa-home"></i> Home</a>
-                        <span>Shop</span>
+                        <a href="#">{{ product.category }} </a>
+                        <span>{{ product.name }}</span>
                     </div>
                 </div>
             </div>
@@ -113,79 +111,112 @@
     </div>
     <!-- Breadcrumb End -->
 
-    <!-- Shop Section Begin -->
-    <section class="shop spad">
+    <!-- Product Details Section Begin -->
+    <section class="product-details spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="shop__sidebar">
-                        <div class="sidebar__categories">
-                            <div class="section-title">
-                                <h4>Categories</h4>
-                            </div>
-                            <div class="categories__accordion">
-                                <div class="accordion" id="accordionExample">
-                                    {% for category in categories %}
-                                    {% if category.parent_category_id == None %}
-                                    <div class="card">
-                                        <div class="card-heading">
-                                            <a data-toggle="collapse" data-target="#collapse{{category.id}}">{{ category.name }}</a>
-                                        </div>
-                                        <div id="collapse{{category.id}}" class="collapse" data-parent="#accordionExample">
-                                            <div class="card-body"> 
-                                                <ul>
-                                                    {% for children in categories %}
-                                                    {% if children.parent_category_id == category.id %}     
-                                                    <li><a href="{{children.id}}">{{children.name}}</a></li>
-                                                    {% endif %}
-                                                </ul>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
+                <div class="col-lg-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__left product__thumb nice-scroll">
+                            {% set image = 'http://localhost:5000/uploads/' ~ product.image %}
+
+                        </div>
+                        <div class="product__details__slider__content">
+                            <div class="product__details__pic__slider owl-carousel">
+                                <img data-hash="product-1" class="product__big__img" src="{{image}}" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 col-md-9">
-                    <div class="row">
-                        
-                        {% for product in products %}
-                        <div class="col-lg-4 col-md-6">
-                            <div class="product__item">
-                                {% set image = 'http://localhost:5000/uploads/' ~ product.image %}
-                                <div class="product__item__pic set-bg" data-setbg="{{ image }}">
-                                    <div class="label new">New</div>
-                                    <ul class="product__hover">
-                                        <li><a href="img/shop/shop-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
-                                        <li><a href=""><span class="icon_bag_alt"></span></a></li>
-                                    </ul>
+                <div class="col-lg-6">
+                    <div class="product__details__text">
+                        <h3>{{ product.name }}</h3>
+                        <div class="product__details__price">{{ product.price }}</div>
+                        <p>{{ product.description }}</p>
+                        <div class="product__details__button">
+                            <!-- Update the action attribute with the URL to handle the form submission -->
+                            <form action="/add_to_cart" method="post">
+                                <div class="quantity">
+                                    <span>Quantity:</span>
+                                    <div class="pro-qty">
+                                        <!-- Ensure the input has a name attribute so its value can be sent with the form -->
+                                        <input id='button_quantity' name='quantity' type="text" value="1">
+                                    </div>
                                 </div>
-                                <div class="product__item__text">
-                                    <h6><a href="detail/{{ product.id }}">{{ product.name }}</a></h6>
-                                    <div class="product__price">{{ product.price }}</div>
-                                </div>
+                                <!-- Change the link to a submit button -->
+                                <button type="submit" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                <h6>Description</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                <h6>Specification</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <h6>Reviews ( 2 )</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
                             </div>
                         </div>
-                    {% endfor %}
-                    
-                        
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Shop Section End -->
+    <!-- Product Details Section End -->
 
     <!-- Instagram Begin -->
     <div class="instagram">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-1.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-1.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -193,7 +224,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-2.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-2.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -201,7 +232,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-3.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-3.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -209,7 +240,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-4.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-4.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -217,7 +248,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-5.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-5.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -225,7 +256,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="static/Shop/img/instagram/insta-6.jpg">
+                    <div class="instagram__item set-bg" data-setbg="{{ url_for('static', filename= 'Shop/img/instagram/insta-6.jpg') }}">
                         <div class="instagram__text">
                             <i class="fa fa-instagram"></i>
                             <a href="#">@ ashion_shop</a>
@@ -244,16 +275,16 @@
                 <div class="col-lg-4 col-md-6 col-sm-7">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="#"><img src="static/Shop/img/logo.png" alt=""></a>
+                            <a href="./index.html"><img src="{{ url_for('static', filename = 'Shop/img/logo.png') }}" alt=""></a>
                         </div>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                         cilisis.</p>
                         <div class="footer__payment">
-                            <a href="#"><img src="static/Shop/img/payment/payment-1.png" alt=""></a>
-                            <a href="#"><img src="static/Shop/img/payment/payment-2.png" alt=""></a>
-                            <a href="#"><img src="static/Shop/img/payment/payment-3.png" alt=""></a>
-                            <a href="#"><img src="static/Shop/img/payment/payment-4.png" alt=""></a>
-                            <a href="#"><img src="static/Shop/img/payment/payment-5.png" alt=""></a>
+                            <a href="#"><img src="{{ url_for('static', filename= 'Shop/img/payment/payment-1.png') }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('static', filename= 'Shop/img/payment/payment-2.png') }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('static', filename= 'Shop/img/payment/payment-3.png') }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('static', filename= 'Shop/img/payment/payment-4.png') }}" alt=""></a>
+                            <a href="#"><img src="{{ url_for('static', filename= 'Shop/img/payment/payment-5.png') }}" alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -319,8 +350,11 @@
         </div>
     </div>
     <!-- Search End -->
-    
+
     <!-- Js Plugins -->
+
+    
+
     <script src="{{ url_for('static', filename='Shop/js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='Shop/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='Shop/js/jquery.magnific-popup.min.js') }}"></script>
@@ -331,6 +365,7 @@
     <script src="{{ url_for('static', filename='Shop/js/owl.carousel.min.js') }}"></script>
     <script src="{{ url_for('static', filename='Shop/js/jquery.nicescroll.min.js') }}"></script>
     <script src="{{ url_for('static', filename='Shop/js/main.js') }}"></script>
+
 </body>
 
 </html>

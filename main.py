@@ -1,5 +1,5 @@
 from flask import Flask,jsonify
-from initialize import db
+from initialize import *
 from flask_cors import CORS
 from admin.routes import *
 from customer_viwe.route import *
@@ -9,10 +9,14 @@ cors = CORS(app)
 
 app.config.from_object('config.DevConfig') 
 db.init_app(app) 
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'plz login first'
+login_manager.login_message_category = 'info'
 
-
-
-
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 app.register_blueprint(customer_bluprint)
 app.register_blueprint(shop)
@@ -28,6 +32,7 @@ app.register_blueprint(payments_blueprint)
 app.register_blueprint(login_admin)
 app.register_blueprint(log_blueprint)
 app.register_blueprint(kpi_blueprint)
+app.register_blueprint(customer)
 
 
 

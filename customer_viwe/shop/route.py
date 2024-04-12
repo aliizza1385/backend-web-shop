@@ -23,3 +23,17 @@ def category_by_id(id):
 
     return render_template('shop.html', categories = categories,products=products)
 
+
+@blueprint.route('/detail/<int:product_id>')
+def detail_product(product_id):
+    product = Product.query.get_or_404(product_id)
+
+    return render_template('product-details.html', product = product)
+
+@blueprint.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    quantity = request.form.get('quantity')
+    # return 'Product added to cart'
+
+    return render_template('shop-cart.html')
+
