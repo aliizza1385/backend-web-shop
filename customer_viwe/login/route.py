@@ -1,20 +1,19 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from admin.Customers.models import Customer
-from flask_login import current_user
 from initialize import db
-from flask_login import login_user,current_user,login_required,logout_user
+from flask_login import current_user,login_user
 
 # Create a Blueprint named 'login'
 blueprint = Blueprint('login', __name__)
 
 # Define the route for login with both GET and POST methods
 @blueprint.route('/home', methods=["GET", "POST"])
-@login_required
+# @login_required
 def home():
     return render_template('index.html')
 
 @blueprint.route('/shop')
-@login_required
+# @login_required
 def shop():
     return render_template('shop.shop')
 
@@ -22,12 +21,13 @@ def shop():
 @blueprint.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('site.main'))
-    elif request.method == "POST":
+        return redirect(url_for('login.shop'))
+    if request.method == "POST":
         email = request.form['email']
         password = request.form['pass']
         customer = Customer.query.filter_by(email = email).first()
         if customer and customer.password == password: 
+            login_user(customer ,remember=True)
             flash('You were successfully logged in','success')
             return redirect(url_for('login.shop'))
         else:
@@ -39,6 +39,7 @@ def login():
     
 @blueprint.route('/register', methods=["GET", "POST"])
 def register():
+    # if form.valid
     if request.method == "POST":
         username = request.form['username']
         email = request.form['email']

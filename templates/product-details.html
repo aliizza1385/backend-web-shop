@@ -135,7 +135,7 @@
                         <p>{{ product.description }}</p>
                         <div class="product__details__button">
                             <!-- Update the action attribute with the URL to handle the form submission -->
-                            <form action="/add_to_cart" method="post">
+                            <form action="/add_to_cart/{{ product.id }}" method="post">
                                 <div class="quantity">
                                     <span>Quantity:</span>
                                     <div class="pro-qty">
@@ -143,6 +143,7 @@
                                         <input id='button_quantity' name='quantity' type="text" value="1">
                                     </div>
                                 </div>
+                                
                                 <!-- Change the link to a submit button -->
                                 <button type="submit" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
                             </form>
