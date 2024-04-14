@@ -10,6 +10,7 @@ from flask_login import current_user
 from admin.Customers.models import Customer
 from admin.Address.models import Address
 from admin.Payments.models import Payment
+from admin.Feedbacks.models import Feedback
 from flask_login import login_user, current_user, logout_user, login_required
 
 # Create a Blueprint named 'login'
@@ -135,12 +136,16 @@ def checkout(id):
         address_line2 = request.form.get('address_line2')
         state = request.form.get('state')
         method = request.form.get('method')
+        feedback = request.form.get('feedback')
+        rating = request.form.get('rating')
         
         
         a = Address(customer_id = current_user.id,address_line1=address_line1,address_line2=address_line2,order_id=order.id,country=country,city=city,postal_code=postal_code,recipient_name=recipient,state=state)
-        p = Payment(order_id=order.id,payment_method=method,amount=order.total_amount)        
+        p = Payment(order_id=order.id,payment_method=method,amount=order.total_amount)       
+        f = Feedback(customer_id = current_user.id,order_id=order.id,rating =rating,comment=feedback) 
         order.status = 'sending'
         db.session.add(a)
+        db.session.add(f)
         db.session.add(p)
         db.session.commit()
         flash("The order was placed", 'success')
@@ -153,20 +158,22 @@ def checkout(id):
 @login_required
 def dashboard():
     context = {}
-    context['orders'] = Order.query.all()
+    context['orders'] = current_user.orders
     if request.method=="GET":
-        return render_template('profile_customer.html',**context)
+        return render_template('dashboard.html',**context)
     
-    # if request.method=="POST":
-    #     username = request.form.get('username',"").strip()
-    #     password = request.form.get('password',"").strip()
-    #     email = request.form.get('email',"").strip()
+    if request.method=="POST":
+        username = request.form.get('username',"").strip()
+        password = request.form.get('password',"").strip()
+        email = request.form.get('email',"").strip()
 
-    #     current_user.username = username
-    #     current_user.email = email
-    #     if password:
-    #         current_user.password = password
-    #     db.session.commit()
-    #     return render_template('ordering/dashboard.html',**context)
+        current_user.username = username
+        current_user.email = email
+        if password:
+            current_user.password = password
+        db.session.commit()
+        return render_template('dashboard.html',**context)
+    
+    
 
 

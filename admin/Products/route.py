@@ -22,6 +22,7 @@ def send_uploaded_file(filename=''):
 
 @blueprint.route('/product', methods=["GET"])
 def product():
+    
     products = Product.query.all()
     all_product = []
     for product in products:
