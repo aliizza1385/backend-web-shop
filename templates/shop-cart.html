@@ -45,7 +45,7 @@
             </a></li>
         </ul>
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+            <a href="./index.html"><img src="static/shop/img/logo.png" alt=""></a>
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__auth">
@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-xl-3 col-lg-2">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="static/Shop/img/logo.png" alt=""></a>
+                        <a href=""><img src="{{ url_for('static',filename='Shop/img/logo.png') }}" alt=""></a>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-7">
@@ -124,25 +124,30 @@
                                     <th></th>
                                 </tr>
                             </thead>
-
                             <tbody>
+
                                 {% for order in orders %}
                                 <tr>
                                     <td class="cart__product__item">
                                         {% set image = 'http://localhost:5000/uploads/' ~ order.product.image %}
-
                                         <img src="{{ image }}" alt="" style="width:50%;">
                                     </td>
                                     <td class="cart__price">{{ order.product.price }}</td>
                                     <td class="cart__quantity">{{ order.quantity }}</td>
                                     {% set total = order.quantity * order.product.price %}
+
                                     <td class="cart__total">{{ total }}</td>
                                     <td class="cart__close"><a href="{{ url_for('shop.delete_in_cart',product_id = order.id) }}" class="icon_close"></a></td>
-
                                 </tr>
                                 {% endfor %}
-                                    
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Total</td>
+                                    <td>{{ totals }}</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -173,10 +178,9 @@
                     <div class="cart__total__procced">
                         <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span>$ 750.0</span></li>
-                            <li>Total <span>$ 750.0</span></li>
+                            <li>Total <span>$ {{total_amount}}</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                        <a href="/checkout/{{ order_id }}" class="primary-btn">Proceed to checkout</a>
                     </div>
                 </div>
             </div>
@@ -188,52 +192,30 @@
     <div class="instagram">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-1.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
-                        </div>
+                <div class="col-xl-3 col-lg-2">
+                    <div class="header__logo">
+                        <a href="./index.html"><img src="static/Shop/img/logo.png" alt=""></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-2.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
-                        </div>
-                    </div>
+                <div class="col-xl-6 col-lg-7">
+                    <nav class="header__menu">
+                        <ul>
+                            <li><a href="./index.html">Home</a></li>
+                            <li class="active"><a href="./shop.html">Shop</a></li>
+                        </ul>
+                    </nav>
                 </div>
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-3.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
+                <div class="col-lg-3">
+                    <div class="header__right">
+                        <div class="header__right__auth">
+                            <a href="{{ url_for('login.login') }}">Login</a>
+                            <a href="{{ url_for('login.register') }}">Register</a>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-4.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-5.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
-                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-6.jpg">
-                        <div class="instagram__text">
-                            <i class="fa fa-instagram"></i>
-                            <a href="#">@ ashion_shop</a>
-                        </div>
+                        <ul class="header__right__widget">
+                            <li><a href="/cart"><span class="icon_bag_alt"></span>
+                            <li><a href="{{ url_for('login.logout') }}"><span class="fa fa-sign-out"></span>
+                            </a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -248,16 +230,16 @@
                 <div class="col-lg-4 col-md-6 col-sm-7">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                            <a href="./index.html"><img src="static/shop/img/logo.png" alt=""></a>
                         </div>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                         cilisis.</p>
                         <div class="footer__payment">
-                            <a href="#"><img src="img/payment/payment-1.png" alt=""></a>
-                            <a href="#"><img src="img/payment/payment-2.png" alt=""></a>
-                            <a href="#"><img src="img/payment/payment-3.png" alt=""></a>
-                            <a href="#"><img src="img/payment/payment-4.png" alt=""></a>
-                            <a href="#"><img src="img/payment/payment-5.png" alt=""></a>
+                            <a href="#"><img src="static/shop/img/payment/payment-1.png" alt=""></a>
+                            <a href="#"><img src="static/shop/img/payment/payment-2.png" alt=""></a>
+                            <a href="#"><img src="static/shop/img/payment/payment-3.png" alt=""></a>
+                            <a href="#"><img src="static/shop/img/payment/payment-4.png" alt=""></a>
+                            <a href="#"><img src="static/shop/img/payment/payment-5.png" alt=""></a>
                         </div>
                     </div>
                 </div>

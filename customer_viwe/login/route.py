@@ -1,21 +1,21 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from admin.Customers.models import Customer
 from initialize import db
-from flask_login import current_user,login_user
+from flask_login import current_user,login_user,login_required,logout_user
 
 # Create a Blueprint named 'login'
 blueprint = Blueprint('login', __name__)
 
 # Define the route for login with both GET and POST methods
-@blueprint.route('/home', methods=["GET", "POST"])
+# @blueprint.route('/home', methods=["GET", "POST"])
 # @login_required
-def home():
-    return render_template('index.html')
+# def home():
+    # return render_template('index.html')
 
 @blueprint.route('/shop')
 # @login_required
 def shop():
-    return render_template('shop.shop')
+    return render_template('shop.html')
 
 
 @blueprint.route('/login', methods=["GET", "POST"])
@@ -36,7 +36,13 @@ def login():
     else:
         return render_template('customer_login.html')
     
-    
+@blueprint.route('/logout', methods=["GET"])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('shop.shop'))
+
+
 @blueprint.route('/register', methods=["GET", "POST"])
 def register():
     # if form.valid
@@ -56,7 +62,7 @@ def register():
             flash('Customer Created','success')
             db.session.add(new_customer)
             db.session.commit()
-            return redirect(url_for('login.home'))
+            return redirect(url_for('login.shop'))
 
     else:
         return render_template('register.html')
