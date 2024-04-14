@@ -59,13 +59,9 @@
                     {% for product in products %}
                     <div class="col-lg-4 col-md-6">
                         <div class="product__item">
-                            {% set image = 'http://localhost:5000/uploads/' ~ product.image %}
+                            {% set image = localhost ~ 'uploads/' ~ product.image %}
                             <div class="product__item__pic set-bg" data-setbg="{{ image }}">
                                 <div class="label new">New</div>
-                                <ul class="product__hover">
-                                    <li><a href="img/shop/shop-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
-                                    <li><a href=""><span class="icon_bag_alt"></span></a></li>
-                                </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6><a href="detail/{{ product.id }}">{{ product.name }}</a></h6>

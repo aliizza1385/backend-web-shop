@@ -37,14 +37,7 @@ def category_by_id(id):
 def detail_product(product_id):
     product = Product.query.get_or_404(product_id)
 
-    return render_template('product-details.html', product = product)
-
-
-# @blueprint.route('/add_cart_shop/<int:customer_id>')
-# def add_cart_shop(customer_id):
-#     customer = Customer.query.get_or_404(customer_id)
-    
-#     return render_template('shop-cart.html', orders=customer.orders.orderitems)
+    return render_template('product-details.html', product = product,localhost = localhost)
 
 @blueprint.route('/add_to_cart/<int:product_id>', methods=['POST'])
 @login_required

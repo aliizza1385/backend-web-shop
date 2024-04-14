@@ -38,7 +38,7 @@
                                 {% for order in orders %}
                                 <tr>
                                     <td class="cart__product__item">
-                                        {% set image = 'http://localhost:5000/uploads/' ~ order.product.image %}
+                                        {% set image = localhost ~ '/uploads/' ~ order.product.image %}
                                         <img src="{{ image }}" alt="" style="width:50%;">
                                     </td>
                                     <td class="cart__price">{{ order.product.price }}</td>

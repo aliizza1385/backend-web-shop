@@ -80,7 +80,7 @@ def product_create():
                 'image':product.image
             })
     else:
-        return 404
+        return 'aasdasd',404
 
     
     

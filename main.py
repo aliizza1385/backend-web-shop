@@ -24,7 +24,7 @@ app.register_blueprint(address_blueprint)
 app.register_blueprint(payments_blueprint)
 app.register_blueprint(login_admin)
 app.register_blueprint(log_blueprint)
-# app.register_blueprint(kpi_blueprint)
+app.register_blueprint(kpi_blueprint)
 app.register_blueprint(customer)
 
 
