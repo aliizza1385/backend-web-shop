@@ -84,15 +84,15 @@
                             <a href="{{ url_for('login.register') }}">Register</a>
                         </div>
                         
-                        {% if current_user.is %}
-                            
-                        {% endif %}
+                        {% if current_user.is_authenticated %}
                             
                         <ul class="header__right__widget">
                             <li><a href="/cart"><span class="icon_bag_alt"></span>
                             <li><a href="{{ url_for('login.logout') }}"><span class="fa fa-sign-out"></span>
                             </a></li>
                         </ul>
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>

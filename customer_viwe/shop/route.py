@@ -32,6 +32,7 @@ def category_by_id(id):
 
 
 @blueprint.route('/detail/<int:product_id>')
+@login_required
 def detail_product(product_id):
     product = Product.query.get_or_404(product_id)
 
@@ -45,6 +46,7 @@ def detail_product(product_id):
 #     return render_template('shop-cart.html', orders=customer.orders.orderitems)
 
 @blueprint.route('/add_to_cart/<int:product_id>', methods=['POST'])
+@login_required
 def add_to_cart(product_id):
     quantity = request.form.get('quantity')
     order = None 
@@ -76,6 +78,7 @@ def add_to_cart(product_id):
 
 
 @blueprint.route('/delete/<int:product_id>')
+@login_required
 def delete_in_cart(product_id):
     orderitem = OrderItem.query.get_or_404(product_id)
     db.session.delete(orderitem)
@@ -85,6 +88,7 @@ def delete_in_cart(product_id):
 
 
 @blueprint.route('/cart', methods=["GET","POST"])
+@login_required
 def cart():
     
     context = {}
@@ -112,6 +116,7 @@ def cart():
 
 
 @blueprint.route('/checkout/<int:id>', methods=["GET","POST"])
+@login_required
 def checkout(id):
     order = Order.query.get_or_404(id)
     context = {}
@@ -145,6 +150,7 @@ def checkout(id):
     
     
 @blueprint.route('/dashboard', methods=["GET","POST"])
+@login_required
 def dashboard():
     context = {}
     context['orders'] = Order.query.all()

@@ -40,8 +40,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('shop.shop'))
     flash('You are out','danger')
+    return redirect(url_for('shop.shop'))
 
 
 @blueprint.route('/register', methods=["GET", "POST"])
