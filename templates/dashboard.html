@@ -47,7 +47,7 @@
                         </button>
         
                         <a href="" class="logo">
-                            <img src="{{ url_for('static',filename='assets/images/demos/demo-10/logo.png') }}" alt="Molla Logo" width="105" height="25">
+                            <img src="{{ url_for('static',filename='Shop/img/logo.png') }}" alt="Molla Logo" width="105" height="25">
                         </a>
                     </div><!-- End .header-left -->
         
@@ -64,16 +64,10 @@
         
                         <!-- Option 1: Include in HTML -->
                         <div class="dropdown cart-dropdown">
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('shop.cart') }}" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                            </a>
-                            <a href="{{ url_for('shop.dashboard') }}" class="mb-1 ml-4 mr-4">
-                                <i style="font-size: 27px;" class="bi bi-person-circle"></i>
-                            </a>
-                            {% else %}
-                                <a class="btn btn-outline-info" style="border-radius: 10px;" href="{{url_for('login.login')}}">Login / Register</a>
-                            {% endif %}
+                            <div class="header__right__auth">
+                            <a href="{{ url_for('login.login') }}">Login</a>/
+                            <a href="{{ url_for('login.register') }}">Register</a>
+                        </div>
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -110,9 +104,6 @@
                                     <li class="nav-item">
                                         <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ url_for('login.logout') }}">Sign Out</a>
-                                    </li>
                                 </ul>
                             </aside><!-- End .col-lg-3 -->
         
@@ -132,7 +123,7 @@
                                             <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
         
                                             <label>New Password (leave blank to leave unchanged)</label>
-                                            <input type="password" class="form-control name="password">
+                                            <input type="password" class="form-control" name="password">
         
                                             <label>Email Address *</label>
                                             <input type="email" class="form-control" name="email" value="{{current_user.email}}" required>
