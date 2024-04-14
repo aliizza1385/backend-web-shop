@@ -13,5 +13,7 @@ class Address(db.Model):
     postal_code = db.Column(db.String(20), nullable=False)
     country = db.Column(db.String(100), nullable=False)
     
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+
     def __repr__(self):
         return '<Address %r>' % self.id

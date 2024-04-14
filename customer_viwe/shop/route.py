@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for,jsonify
+from flask import Blueprint, render_template, request, redirect, url_for,jsonify,flash
 
 from initialize import db
 from admin.Categori.models import Category
@@ -10,6 +10,7 @@ from flask_login import current_user
 from admin.Customers.models import Customer
 from admin.Address.models import Address
 from admin.Payments.models import Payment
+from flask_login import login_user, current_user, logout_user, login_required
 
 # Create a Blueprint named 'login'
 blueprint = Blueprint('shop', __name__)
@@ -70,7 +71,8 @@ def add_to_cart(product_id):
         db.session.commit()
     
     # return redirect(url_for('site.product',id=id))
-    return render_template('shop-cart.html', orders=order.orderitems)
+    print( order.id)
+    return render_template('shop-cart.html', orders=order.orderitems,total_amount = order.total_amount,order_id = order.id)
 
 
 @blueprint.route('/delete/<int:product_id>')
@@ -84,22 +86,28 @@ def delete_in_cart(product_id):
 
 @blueprint.route('/cart', methods=["GET","POST"])
 def cart():
+    
     context = {}
     order = None # for check if exist a cart
     for item in current_user.orders:
         if item.status == "cart":
             order = item
     context['order'] = order
-
-    if request.method == "GET":
+    if order is None:
+        context['order'] = None
+        return render_template('shop-cart.html', **context)
+    
+    elif request.method == "GET":
         return render_template('shop-cart.html',orders = order.orderitems,total_amount = order.total_amount,order_id = order.id)
     # print( order.total_amount)
-    
+
     elif request.method == 'POST':
         for item in order.orderitems:
             item.quantity = request.form.get(str(item.id)) # gets new quantity from cart
             db.session.commit()
-        return redirect(url_for('shop.checkout',id=order.id))
+        return redirect(url_for('shop.shop',id=order.id))
+    
+
     
 
 
@@ -117,15 +125,20 @@ def checkout(id):
         city = request.form.get('city')
         street = request.form.get('street')
         postal_code = request.form.get('postal_code')
+        recipient = request.form.get('recipient')
+        address_line1 = request.form.get('address_line1')
+        address_line2 = request.form.get('address_line2')
+        state = request.form.get('state')
         method = request.form.get('method')
-        a = Address(order_id=order.id,country=country,city=city,
-                        street=street,postal_code=postal_code)
-        p = Payment(order_id=order.id,method=method,amount=order.total_amount)        
+        
+        
+        a = Address(customer_id = current_user.id,address_line1=address_line1,address_line2=address_line2,order_id=order.id,country=country,city=city,postal_code=postal_code,recipient_name=recipient,state=state)
+        p = Payment(order_id=order.id,payment_method=method,amount=order.total_amount)        
         order.status = 'sending'
         db.session.add(a)
         db.session.add(p)
         db.session.commit()
-        flash("Order Placed !", 'info')
+        flash("The order was placed", 'success')
         return redirect (url_for('shop.dashboard'))
     
     
@@ -136,7 +149,7 @@ def dashboard():
     context = {}
     context['orders'] = Order.query.all()
     if request.method=="GET":
-        return render_template('profile.html',**context)
+        return render_template('profile_customer.html',**context)
     
     # if request.method=="POST":
     #     username = request.form.get('username',"").strip()
