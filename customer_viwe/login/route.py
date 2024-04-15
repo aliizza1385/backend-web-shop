@@ -18,8 +18,8 @@ def shop():
     return render_template('shop.html')
 
 
-@blueprint.route('/login', methods=["GET", "POST"])
-def login():
+@blueprint.route('/login_customer', methods=["GET", "POST"])
+def login_customer():
     if current_user.is_authenticated:
         return redirect(url_for('login.shop'))
     if request.method == "POST":

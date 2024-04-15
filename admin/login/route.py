@@ -10,6 +10,8 @@ def login():
     username = request.json.get('username').strip()
     password = request.json.get('password').strip()
     user = User.query.filter_by(username=username).first()
+    print(username)
+    print(password)
     if username == 'alireza' and password == 'hosseini':
         return jsonify({
             'id':0,
